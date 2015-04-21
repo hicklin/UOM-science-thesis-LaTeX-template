@@ -1,0 +1,60 @@
+%%%::::::::::::::::::::::::::::::scienceThesis V2::::::::::::::::::::::::::::::%%%
+\input{Preamble.tex}
+
+\usepackage[version=3]{mhchem}% usage \ce{CO2}, \ce{2H2 + O2 -> 2H2O} etc.
+\usepackage{siunitx}% usage \SI{number}{units} or \si{units}. Separate different SI units by . e.x. m.s^-1
+\usepackage{url}% usage \url{write your url as is}
+
+\begin{document}
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The following fields are required information to be filled for the thesis.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\title{Dissertation Title}
+\author{name surname}
+\date{Publication date}
+\supervisor{supervisor}
+\department{Physics}% Physics, Chemistry or Biology
+\degree{M.Sc}% B.Sc (Hons), M.Sc, Ph.D
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The following fields are optional although certain fields, e.x. abstract,
+% acknowledgements, are must to be filled for the final dissertation.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%\cosupervisor{cosupervisor}
+%\acronyms{acronyms.tex}% Enter the tex file containing the acronym information.
+%\dedication{}
+%\acknowledgements{}
+%\abstract{}
+%\publications{}
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+\frontmatter% this command will generate all the front pages according to the information entered in the section above. 
+
+\chapter{Introduction}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The following commands are required for generating the references section.
+% \bibliographystyle{} command sets the citation style and \bibliography{} gives
+% the files in which the bibliography code is place. If the code is contained in
+% multiple files, separate them by a comma and NO space e.x. {ref1.bib,ref2.bib}
+%
+% References and Bibliography should be placed before the Appendix.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\bibliomatter
+\bibliographystyle{packages/aip}
+\bibliography{ref.bib}
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The following command will add the bibliography section including all the
+% materials who's citation code is written in bib.bib, or the files written
+% between the {}.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\bibliografia{packages/vancouver}{bib}
+
+\appendix
+
+
+\end{document}

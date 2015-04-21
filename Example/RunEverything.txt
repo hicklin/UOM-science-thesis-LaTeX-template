@@ -1,0 +1,46 @@
+@echo off
+set i=0
+set tex=#
+
+:LoopStart
+
+IF EXIST %tex%.tex GOTO LoopEnd
+
+	set /p tex=Enter TeX filename:
+
+GOTO LoopStart
+:LoopEnd
+
+echo %tex%.tex exists
+
+pdflatex %tex%.tex
+pdflatex %tex%.tex
+bibtex %tex%.aux
+bibtex bu1.aux
+makeglossaries %tex%
+pdflatex %tex%.tex
+pdflatex %tex%.tex
+
+echo "If you would like this script to remove unnecessary file, uncomment the following commands. Remember, deleting files such as .glo will remove data required for the generation of the glossaries and will therefore not be shown in the pdf the next time you run PdfLaTeX"
+
+goto comment
+echo "Removing unnecessary files, If desired comment the related lines in RunEverything"
+DEL bu.aux
+DEL bu1.aux
+DEL bu1.bbl
+DEL bu1.blg
+DEL %tex%.acn
+DEL %tex%.acr
+DEL %tex%.alg
+DEL %tex%.aux
+DEL %tex%.bbl
+DEL %tex%.blg
+DEL %tex%.glo
+DEL %tex%.ist
+DEL %tex%.lof
+DEL %tex%.lot
+DEL %tex%.out
+DEL %tex%.toc
+:comment
+
+pause

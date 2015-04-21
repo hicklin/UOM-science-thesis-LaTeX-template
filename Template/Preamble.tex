@@ -1,0 +1,98 @@
+%%%::::::::::::::::::::::::::::::scienceThesis V2::::::::::::::::::::::::::::::%%%
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Hello!!! Welcome to the \LaTeX{} template for your University of Malta, Faculty 
+% of Science thesis. This template was created (hacked!) by 
+% William Hicklin B.Sc (Hons) Chem & Phy and Eric Pace B.Sc (Hons) Phy & AI (2012)
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% This is the preamble code required for part of the thesis type-setting. This
+% code must be included before the \begin{document} in the scienceThesis.tex file.
+% To do this use the command \input{Preamble.tex}.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\documentclass[12pt,a4paper]{report}
+
+\usepackage{packages/scienceThesis}% Needed for further type-settings and commands
+\usepackage{verbatim}% needed for the ``code" and other environments
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bibunits}% needed for the bibliography section
+\usepackage{lipsum}% needed for the generating text in the example
+\usepackage[acronym,toc,nonumberlist]{glossaries}% This package is required for adding acronyms.
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The following environments are useful to present proofs in your thesis. These
+% packages are not really necessary, if you don't need the code and proofs
+% environments, so if you like you can delete from here till ``the next comment".
+% Note that there are some examples below which obviously won't work once you
+% remove this part
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{definition}%plain}
+\newtheorem{example}{Example}[section]
+\theoremstyle{definition}%remark}
+\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{definition}%remark}
+\newtheorem{lemma}{Lemma}[section]
+\theoremstyle{definition}%remark}
+\newtheorem{corollary}{Corollary}[section]
+\theoremstyle{definition}%remark}
+\newtheorem{theorem}{Theorem}[section]
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The next comment!
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% This section customises the headers of chapters, headers and footers.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Customising headers and footers.
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\rhead{}
+\lhead{\nouppercase{\textsc{\leftmark}}}
+\renewcommand{\headrulewidth}{1pt}
+\makeatletter
+\renewcommand{\chaptermark}[1]{\markboth{\small\textsc{\@chapapp}\ \thechapter:\ \sc{#1}}{}}
+\makeatother
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Customising chapter headings.
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\usepackage{sectsty}
+\chapterfont{\large\sc\centering}
+\chaptertitlefont{\sc\centering}
+\subsubsectionfont{\centering}
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% PDF hyper-linking (set colours to black for printing)
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\usepackage[colorlinks]{hyperref}
+%\usepackage[figure,table]{hypcap}
+\hypersetup{
+	bookmarksnumbered,
+	pdfstartview={FitH},
+	citecolor={black},
+	linkcolor={black},
+	urlcolor={black},
+	pdfpagemode={UseOutlines}
+}
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\setlength{\headheight}{15pt}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Sets the document to be line separated paragraphs not indentation separated
+% paragraphs. To change to an indentation with no line skip simply change
+% \parindent 0cm --> \parindent 1.3cm & \parskip 2ex --> \parskip 0ex
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\parindent 0cm
+\parskip 2ex
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% End of preamble
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

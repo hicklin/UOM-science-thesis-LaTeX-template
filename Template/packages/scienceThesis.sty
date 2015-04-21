@@ -1,0 +1,937 @@
+%%%:::::::::::::::::::::::::::::scienceThesis V2.2:::::::::::::::::::::::::::::%%%
+% Hello!!! Welcome to the style file for your University of Malta, Faculty of
+% Science thesis template. This style file was created (hacked!) by 
+% William Hicklin B.Sc (Hons) Chem & Phy and Eric Pace B.Sc (Hons) Phy & AI (2012)
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The updates from version 2 are listed below
+%   * Headers for the References, Bibliography and Appendix sections have been
+%   fixed.
+%   * The \bibliografia{}{} command has been modified to allow for the possibility
+%   of choosing the citation style. The first parameter gives the style and the
+%   second parameter gives the .bib file.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% This style file was based on the ICT final year project style file ``fyp.sty"
+% found at http://www.um.edu.mt/ict/UG/DayDegrees/FYPDay/FYPD1112/WD. This style
+% file follows the Faculty of Science, Department of Physics guidelines document
+% ``Final year dissertations and review paper formatting guidelines" found at
+% http://www.um.edu.mt/__data/assets/pdf_file/0009/138294/Final_year_dissertations_and_review_paper_formatting_guidelines.pdf
+%
+% WARNING:  This package uses the report document class
+%           and works well only with single sided reports.
+%
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% In this style file you will find all the code that creates the titlepage
+% (\maketitle), deceleration page (\decelerationcom), dedication page
+% (\dedicationcom), publications page (\publicationscom), tables of contents,
+% acknowledgements page (\acknowledgementscom) and abstract page (\abstractcom).
+% You will also find settings for the headings ans type-setting styles.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\NeedsTeXFormat{LaTeX2e} %
+\ProvidesPackage{scienceThesis}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% First thing to do is make sure that report has been loaded. A
+% common error is to try to use valerie-dissertation as a documentclass.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\@ifundefined{chapter}{
+  \@latexerr{The `scienceThesis' option
+  should be used with the `report' document style
+}{}}{}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Include required packages.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\RequirePackage{ifthen}
+\RequirePackage{fancyhdr}
+\RequirePackage{setspace}
+\RequirePackage{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{listings}
+\RequirePackage{color}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Set margins for dissertation.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\geometry{
+top=2.5cm, bottom=2.5cm, left=3cm, right=3cm,
+includeheadfoot, headsep=1cm, footskip=1cm, centering
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Set captions type-setting.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\usepackage[margin=10pt,font=small,labelfont=bf]{caption}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Setup options for this package and process them.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newif\if@togglefonts
+\DeclareOption{togglefonts}{\@togglefontstrue}
+
+%\ExecuteOptions{togglefonts} %Sets the togglefonts option (even if not specified by user).
+\ProcessOptions
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Toggle roman and sans-serif fonts.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\if@togglefonts
+  \renewcommand{\rmdefault}{phv}
+  \renewcommand{\sfdefault}{times}
+\fi
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Define commands for different section names.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand\dedicationname{Dedication}
+\newcommand\acknowledgename{Acknowledgements}
+\newcommand\listabbrevname{List of Abbreviations}
+\newcommand\refname{References}
+\newcommand\biblioname{Bibliography}
+\newcommand\glossaryname{Glossary}
+
+\renewcommand\contentsname{Contents}
+\renewcommand\listfigurename{List of Figures}
+\renewcommand\listtablename{List of Tables}
+\renewcommand\bibname{Bibliography}
+\renewcommand\indexname{Index}
+\renewcommand\figurename{Figure}
+\renewcommand\tablename{Table}
+\renewcommand\partname{Part}
+\renewcommand\chaptername{Chapter}
+\renewcommand\appendixname{Appendix}
+\renewcommand\abstractname{Abstract}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Macro and Variable Definitions. Define macros \department, \supervisor,
+% \cosupervisor, \degree, \dedication, \abstract, \acknowledgements,
+% \publications and \acronyms.
+% \author, \title, \date are already defined in the report document class.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\def\department#1{\gdef\@department{#1}}
+\def\supervisor#1{\gdef\@supervisor{#1}}
+\def\cosupervisor#1{\gdef\@cosupervisor{#1}}
+\def\degree#1{\gdef\@degree{#1}}
+\def\dedication#1{\gdef\@dedication{#1}}
+\def\abstract#1{\gdef\@abstract{#1}}
+\def\acknowledgements#1{\gdef\@acknowledgements{#1}}
+\def\publications#1{\gdef\@publications{#1}}
+\def\acronyms#1{\gdef\@acronyms{#1}}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Redefine the macro \@makechapterhead (found in report.cls) to print the chapter
+% headings using the specified command. Define the macro \linespace to set the
+% main content's default line spacing. Define the macro \headerChapterSeparator
+% which defines the separator between the chapter number and chapter name in the
+% header. Define lengths used in indented environment.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\def\@makechapterhead{\chapterhead}
+\def\linespace{1.5}
+\def\headerChapterSeparator{\ --\ }
+\newlength{\mpwidth}
+\newlength{\oldindent}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Redefine command \maketitle. Creates the title page for the thesis 
+% Requires values for the macros:
+% \title, \author, \date, \supervisor and \cosupervisor (optional).
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\renewcommand\maketitle{%
+  \begin{titlepage}
+  \let\footnotesize\small
+  \let\footnoterule\relax
+  \let \footnote \thanks
+  \vfill
+  \begin{center}%
+    {\Huge\bfseries \@title \par}%
+    \vfill
+    {\Large
+      {\bfseries \@author \par}}
+      \vspace*{30\p@}
+    {\large Supervisor: \@supervisor
+      \par
+    }
+    \ifthenelse{\equal{\@cosupervisor}{}}{\vspace*{80\p@}}{
+    {\large Co-supervisor: \@cosupervisor
+      \vspace*{80\p@}
+    }}
+
+    \begin{minipage}{\textwidth}
+      \begin{center}
+        \includegraphics[height=3cm]{packages/crest.pdf}% includes UOM crest pdf logo located in packages.
+      \end{center}
+    \end{minipage}
+
+    {\Large\bfseries
+      \vspace*{30\p@}
+      University of Malta
+      \vspace*{30\p@}
+      
+      Faculty of Science
+      \par
+      \vspace*{80\p@}}
+    {\large  \@date
+    }
+    \vfill
+  \end{center} \par
+  \end{titlepage}
+}
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define command \declaration. Creates the declaration page for the dissertation.
+% Requires values for the macros:
+% \author, \supervisor, \cosupervisor (optional), \department and \degree
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\declaration}{%#
+  \clearpage
+  \thispagestyle{plain}
+  \setcounter{page}{2}
+  %
+  \begin{center}
+    {\Large\bfseries Faculty of Science}
+    \vspace{1cm}
+
+    {\large\bfseries Statement of Authenticity}
+    \vspace{1.5cm}
+  \end{center}
+
+  \noindent The undersigned declare that this dissertation is based on work carried out under the auspices of the Department of \@department{} by the candidate as part fulfilment of the requirements of the degree of \@degree.
+  \newline
+
+  \vspace{3cm}
+
+\ifthenelse{\equal{\@cosupervisor}{}}{
+
+	\begin{minipage}[t]{0.4\textwidth}
+	\begin{flushleft}
+	\line(1,0){165} \\
+	\@author \\
+	\textit{Candidate}
+	\end{flushleft}
+	\end{minipage}
+	\hspace{0.2\textwidth}
+%
+	\begin{minipage}[t]{0.4\textwidth}
+	\begin{flushleft}
+	\line(1,0){165} \\
+	\@supervisor \\
+	\textit{Supervisor}
+	\end{flushleft}
+	\end{minipage}
+}{
+	\begin{minipage}[t]{0.3\textwidth}
+	\begin{flushleft}
+	\line(1,0){115} \\
+	\@author \\
+	\textit{Candidate}
+	\end{flushleft}
+	\end{minipage}
+	\hspace{0.05\textwidth}
+%
+	\begin{minipage}[t]{0.3\textwidth}
+	\begin{flushleft}
+	\line(1,0){115} \\
+	\@cosupervisor \\
+	\textit{Co-supervisor}
+	\end{flushleft}
+	\end{minipage}
+	\hspace{0.05\textwidth}
+%
+	\begin{minipage}[t]{0.3\textwidth}
+	\begin{flushleft}
+	\line(1,0){115} \\
+	\@supervisor \\
+	\textit{Supervisor}
+	\end{flushleft}
+	\end{minipage}
+	}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Define command \dedicationcom.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\dedicationcom}[1]{%
+
+\ifthenelse{\equal{#1}{}}{}{
+
+  \clearpage
+  \thispagestyle{plain}
+  \singlespacing
+
+  \vspace*{38\p@}
+  \begin{flushleft}
+     \Huge \bfseries \dedicationname
+  \end{flushleft}
+  \vspace{1.0in}
+  \begin{flushright}
+  \textit{#1}
+  \end{flushright}
+  \par
+  }
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The publication command.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\publicationscom}[1]{
+
+\ifthenelse{\equal{#1}{}}{}{
+
+	\clearpage
+    \thispagestyle{plain}
+    \singlespacing
+	
+	\vspace*{38\p@}
+    \@beginparpenalty\@lowpenalty
+    \begin{center}%
+      \Huge \bfseries \sc{Publications}
+      \@endparpenalty\@M
+    \end{center}
+	\vspace{1.0in}
+	#1
+	\par
+}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The acknowledgments command.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\acknowledgementscom}[1]{
+
+\ifthenelse{\equal{#1}{}}{}{
+
+  \clearpage
+  \thispagestyle{plain}
+  \singlespacing
+  \addcontentsline{toc}{chapter}{Acknowledgements}
+
+  \vspace*{38\p@}
+  \begin{center}%
+    \Huge \bfseries \sc \acknowledgename
+    \@endparpenalty\@M
+  \end{center}
+  \vspace{1.0in}
+  #1
+  \par
+  }
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  The abstract command.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\abstractcom}[1]{%
+
+\ifthenelse{\equal{#1}{}}{}{
+    \clearpage
+    \thispagestyle{plain}
+    \singlespacing
+    \addcontentsline{toc}{chapter}{Abstract}
+	
+	\vspace*{38\p@}
+    \@beginparpenalty\@lowpenalty
+    \begin{center}%
+      \Huge \bfseries \sc \abstractname
+      \@endparpenalty\@M
+    \end{center}
+	\vspace{1.0in}
+	#1
+	\par
+	}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Accronyms
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\acronymcom}[1]{%
+
+\ifthenelse{\equal{#1}{}}{}{
+
+\input{#1}% Inputs the glossary list written in the file specified in the command.
+	\begin{doublespace}
+	\printglossary[type=acronym,title={Acronyms}]% Prints the glossary with the title Acronyms.
+	\end{doublespace}
+\makeglossaries
+\glsresetall% Resets the acronyms so that the full definition is shown again upon first use.
+}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \mainmatter.
+% Sets the page numbering, spacing, headers and footers before
+% the beginning of the document's main content pages.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\mainmatter}{%
+  \clearpage
+  \pagenumbering{arabic} %
+  \setcounter{page}{1} %
+  \ifthenelse{\equal{\linespace}{single}} {\singlespacing} {
+      \ifthenelse{\equal{\linespace}{oneandhalf}} {\onehalfspacing} {
+        \ifthenelse{\equal{\linespace}{double}} {\doublespacing} {
+            \setstretch{\linespace}
+        }
+      }
+  }
+
+  % ** Set the header and footer text using the fancyplain page style **
+  % http://www.essex.ac.uk/linguistics/clmt/latex4ling/headers/
+  %
+  \pagestyle{fancyplain}
+  
+  %\renewcommand{\chaptermark}[1]{\markleft{#1}{}}
+%  \renewcommand{\sectionmark}[1]{\markright{#1}}
+
+  \lhead{\fancyplain{}{\nouppercase\leftmark}}%\chaptername\ \thechapter\headerChapterSeparator
+  \chead{\fancyplain{}{}}%
+  \rhead{\fancyplain{}{}}
+  \lfoot{\fancyplain{}{}} %
+  \cfoot{\fancyplain{\thepage}{\thepage}} %
+  \rfoot{\fancyplain{}{}}
+
+  \renewcommand{\headrulewidth}{0.5pt} %underline the header
+  \renewcommand{\footrulewidth}{0pt} %remove the footer underline
+  %
+  % ********************************************************************
+
+  % ************************* Redefine the plain style *****************
+  % http://www.ntg.nl/maps/pdf/16_29.pdf
+  % http://www.maths.soton.ac.uk/~ap/latex/fancyhdr.html
+  %
+  \fancypagestyle{plain} {
+    \fancyhf{}  %clear all header and footer fields
+    \fancyfoot[C]{\thepage}  %set the footer center field
+
+    \renewcommand{\headrulewidth}{0pt} %remove the header underline
+    \renewcommand{\footrulewidth}{0pt} %remove the footer underline
+  }
+  %
+  % ********************************************************************
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \frontmatter.
+% Sets the page numbering, spacing, headers and footers before
+% the beginning of the document's main content pages.
+%
+% An optional argument can be used to specify the name of a file to be
+% included after the title page (containing: dedication, abstract etc.).
+%
+% \frontmatter will also generate the title page, deceleration, dedication,
+% publications, tables of contents, acknowledgements, abstract and acronyms.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\frontmatter}[1][]{%
+  \pagenumbering{roman}%
+  \pagestyle{plain}%
+  \singlespacing
+
+  \maketitle% Makes the title page.
+
+  \declaration%
+
+  \dedicationcom{\@dedication}
+  
+  \publicationscom{\@publications}
+  
+  \tableofcontents
+
+  \newpage
+  \addcontentsline{toc}{chapter}{List of Figures}
+  \listoffigures
+
+  \newpage
+  \addcontentsline{toc}{chapter}{List of Tables}
+  \listoftables
+
+  \acknowledgementscom{\@acknowledgements}
+
+  \abstractcom{\@abstract}
+
+  \acronymcom{\@acronyms}
+
+  \setcounter{footnote}{0}% Starts new counter for Arabic numbers.
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@thanks\@empty
+  \global\let\@title\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\@supervisor\@empty
+  \global\let\@cosupervisor\@empty
+  \global\let\@degree\@empty
+  \global\let\@dedication\@empty
+  \global\let\@abstract\@empty
+  \global\let\@publications\@empty
+  \global\let\@department\@empty
+  \global\let\@acronyms\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\supervisor\relax
+  \global\let\cosupervisor\relax
+  \global\let\degree\relax
+  \global\let\dedication\relax
+  \global\let\abstract\relax
+  \global\let\publications\relax
+  \global\let\department\relax
+  \global\let\acronyms\relax
+  \global\let\and\relax
+
+  \ifthenelse{%
+    \equal{#1}{}} {} {\include{#1}
+  }
+  \mainmatter% Takes care of the page style of the rest of the thesis and the page numbering
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \bibliomatter. Sets the spacing, headers and footers before
+% the end pages following the document's main content pages which will contain the
+% references/bibliography.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\bibliomatter}{%
+  \singlespacing
+
+  \addbibliototoc[\refname]
+
+  %Set left header text.
+  \lhead{\fancyplain{}{\refname}}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \biblio. Sets the spacing, headers and footers before the end
+% pages for an additional bibliography. The bibunit is required to add additional
+% bibliography/references sections.
+%
+% See: http://www-h.eng.cam.ac.uk/help/tpl/textprocessing/bibliographies.html
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\biblio}{%
+  \singlespacing
+
+  \addbibliototoc[\biblioname]
+
+  %Set left header text.
+  \lhead{\fancyplain{}{\biblioname}}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \appendixfrontpage. Creates the front page for the appendices.
+% The mandatory argument is the name of title on the page. The optional argument
+% can be used to add a different title for this page in the table of contents.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\appendixfrontpage}[2][]{%
+  \clearpage
+  \ifthenelse{\equal{#1}{}}
+    {\addcontentsline{toc}{chapter}{#2}}
+    {\addcontentsline{toc}{chapter}{#1}}
+  \thispagestyle{plain}
+
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \interlinepenalty\@M
+    \Huge\bfseries #2\par\nobreak
+
+    \begin{tabular*}{1.0\textwidth}[h]{c}
+      \hline
+    \end{tabular*}
+
+    \vskip 40\p@
+  }
+  \@afterheading
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Redefine command \appendix. Changes the chapter numbering, sets the header and
+% changes the way the \makechapterhead macro to a new definition.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\renewcommand{\appendix}{
+  \setcounter{section}{0}%
+  \setcounter{chapter}{0}%
+  \renewcommand\chaptername{\appendixname}%
+  \renewcommand\thechapter{\@Alph\c@chapter}
+
+% Set left header text.
+  \lhead{\fancyplain{}{\nouppercase\leftmark}}%\chaptername\ \thechapter\headerChapterSeparator\chaptermark}}
+%
+%  \def\@makechapterhead{\appendixhead}
+%  \setstretch{\linespace}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Redefine the command \@chapter. Calls the commands which print the chapter
+% headings and adds the chapter name to the table of contents.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\def\@chapter[#1]#2{%
+    \ifnum \c@secnumdepth >\m@ne
+         \refstepcounter{chapter}%
+         \typeout{\@chapapp\space\thechapter.}%
+         \addcontentsline{toc}{chapter}%
+                   {\protect\numberline{\thechapter.}#1}%
+    \else
+      \addcontentsline{toc}{chapter}{#1}%
+    \fi
+    \chaptermark{#1}%
+    \addtocontents{lof}{\protect\addvspace{10\p@}}%
+    \addtocontents{lot}{\protect\addvspace{10\p@}}%
+    \if@twocolumn
+      \@topnewpage[\@makechapterhead{#2}]%
+    \else
+      \@makechapterhead{#2}%
+      \@afterheading
+    \fi}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define the commands \chapterhead, \appendixhead.
+% Print new chapter and appendix headings.
+% \chapterhead prints headings for chapters in the mainmatter section.
+% \appendixhead prints headings for chapters in the appendix section.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\chapterhead}[1]{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+        \Huge\bfseries\thechapter .
+    \fi
+    \Huge\bfseries#1\par\nobreak
+
+    \begin{tabular*}{1.0\textwidth}[h]{c}
+      \hline
+    \end{tabular*}
+
+    \vskip 40\p@
+  }
+}
+
+\newcommand{\appendixhead}[1]{%
+%  \renewcommand{\thepage}{\thechapter--\arabic{page}}
+%  \setcounter{page}{1}
+     % use the above two commands if you want page numbers
+     % in appendix to be:  A-1, A-2, ... B-1, B-2 ...)
+%  \vspace*{50\p@}%
+%  {\parindent \z@ \raggedright \normalfont
+%    \ifnum \c@secnumdepth >\m@ne
+%        \LARGE\bfseries\@chapapp\space \thechapter %default font size is \huge
+%        \par\nobreak
+%        \vskip 20\p@
+%    \fi
+%    \Huge\bfseries#1\par\nobreak
+%
+%    \drawhline
+%    \vskip 40\p@
+%  }
+  \chapterhead{#1}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Define new command \addlistoffigures. Creates the list of figures. The optional
+% argument [addtotoc] can be specified to add the list of figures to the table of
+% contents.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\addlistoffigures}[1][]{%
+  \clearpage
+
+%  \ifthenelse{\equal{#1}{addtotoc}}
+%    {\addcontentsline{toc}{chapter}{\listfigurename}} {}
+	
+  \listoffigures
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \addlistoftables. Creates the list of tables. The optional
+% argument [addtotoc] can be specified to add the list of tables to the table of
+% contents.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\addlistoftables}[1][]{%
+  \clearpage
+
+  \ifthenelse{\equal{#1}{addtotoc}}
+    {\addcontentsline{toc}{chapter}{\listtablename}} {}
+
+  \listoftables
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \listofabbreviations. Creates the page for the list of
+% abbreviations as a new chapter.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand\listofabbreviations{%
+    \chapter*{\listabbrevname}%
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \addlistofabbreviations. Creates the page for the list of
+% abbreviations. The optional argument [addtotoc] can be specified to add the list
+% of abbreviations to the table of contents.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\addlistofabbreviations}[1][]{%
+  \clearpage
+
+    \ifthenelse{\equal{#1}{addtotoc}}
+    {\addcontentsline{toc}{chapter}{\listabbrevname}} {}
+
+  \listofabbreviations
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \addbibliototoc. Adds the bibliography to the TOC. An
+% optional argument can be used to specify a different name for the bibliography
+% (which appears as the title when the bibliography starts, in the table of
+% contents and in the header).
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\addbibliototoc}[1][]{%
+  \ifthenelse{\equal{#1}{}} {} {\renewcommand\bibname{#1}}
+
+  \clearpage %
+  \addcontentsline{toc}{chapter}{\bibname}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \setheaderchaptername. This sets the name of the chapter
+% which will appear in the header.
+%
+% This should be used after the \chapter command and ONLY IF
+% - the chapter name in the header is different from the
+%   'long_title' specified by the \chapter{long_title} command
+% OR
+% - the chapter name in the header is different from the 'short_title'
+%   specified by the \chapter[short_title]{long_title} command.
+%
+% The mandatory argument is the chapter name to appear in the header.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\setheaderchaptername}[1]{%
+    \chaptermark{#1}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \setlinespacing to set the main content's default line spacing.
+%
+% Usage: \setlinespacing{value} or \setlinespacing{description}
+% where value is a numeric value specifying a custom line spacing
+% and description is one of the following:
+%   single
+%   oneandhalf
+%   double
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\setlinespacing}[1]{
+    \def\linespace{#1}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \symbolfootnote. Creates a footnote with a symbol instead of
+% a number.
+%
+% Usage: \symbolfootnote[symbol_number]{footnote_text}
+% where symbol_number is a number between 0 and 9
+% specifying the footnote symbol which include:
+%   0 - no symbol
+%   1 - asterisk
+%   2 - dagger
+%   3 - double dagger
+%   4 - double nine
+%   ...
+%   7 - two asterisks
+%   8 - two daggers
+%   9 - two double daggers
+%
+%  From: http://help-csli.stanford.edu/tex/latex-footnotes.shtml#symbol
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\long\def\symbolfootnote[#1]#2{\begingroup%
+    \def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}%
+    \endgroup%
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \symbolfootnotemark. Creates a footnote mark with a symbol
+% instead of the last footnote number.
+%
+% Usage: \symbolfootnotemark[symbol_number]
+% where symbol_number is a number between 1 and 9
+% specifying the footnote mark symbol which include:
+%   1 - asterisk
+%   2 - dagger
+%   3 - double dagger
+%   4 - double nine
+%   ...
+%   7 - two asterisks
+%   8 - two daggers
+%   9 - two double daggers
+%
+% See: http://www.image.ufl.edu/help/latex/notes.shtml
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\long\def\symbolfootnotemark[#1]{\begingroup%
+    \def\thefootnote{\fnsymbol{footnote}}\footnotemark[#1]%
+    \endgroup%
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \drawline. Draws a horizontal line.
+%
+% An optional argument can be used to specify the width of the line as a
+% percentage of the text width (eg: 0.5 makes the line as wide as half the text
+% width). If not specified, the line will be as wide as the text width.
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\drawhline}[1][1.0]{%
+  \begin{tabular*}{#1\textwidth}[h]{c}
+    \hline
+  \end{tabular*}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \captionline. Draws a line before a caption and changes the
+% spacing between the line and the caption.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\def\captionline{\drawhline \vspace{-1.5\baselineskip}}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new commands \superscript and \subscript. Write text as a superscript or
+% subscript in text mode while in math mode.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\superscript}[1]{\ensuremath{^{\mbox{\scriptsize #1}}}}
+\newcommand{\subscript}[1]{\ensuremath{_{\mbox{\scriptsize #1}}}}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define new command \textmode. Write text in text mode while in math mode.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\textmode}[1]{\ensuremath{\mbox{#1}}}
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Define the command \bibliografia{1}{2} used to generate the bibliography. The
+% command requires the bibliography style {1} e.g. {ieeetr} and the .bib file {2}
+% where the bibliography information is stored. BibTeX has to be run on the bu1.aux
+% file to generate the bibliography. A bash, for Unix, and batch, for msdos systems,
+% file to run all the commands is provided.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+\newcommand{\bibliografia}[2]{%
+
+\singlespacing
+
+\addbibliototoc[Bibliography]
+
+\lhead{\fancyplain{}{Bibliography}}
+
+\begin{bibunit}[#1]% The option identifies the style of citation
+\nocite{*}
+\putbib[#2]
+\end{bibunit}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The code environment for code snippets.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% The indented environment defines an indented section of text. The text is
+% inserted in a new minipage whose width and position are set accordingly.
+%
+% The first argument specifies by how much the text will be indented from the
+% current left margin (can be negative). The second argument specifies by how much
+% the text will be indented from the current right margin (can be negative).
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newenvironment{code}
+{\footnotesize\verbatim}{\endverbatim\normalfont}
+
+\newenvironment{indented}[2]{%
+  \setlength{\mpwidth}{\textwidth} %Set the width of the minipage.
+  \addtolength{\mpwidth}{-#1} %Decrease width by the left margin indent.
+  \addtolength{\mpwidth}{-#2} %Decrease width by the right margin indent.
+  \setlength{\oldindent}{\parindent} %Save the current paragraph indentation value.
+  \noindent %Do not indent the minipage automatically (by normal paragraph indentation).
+  \hspace{#1} %Indent the minipage from the current left margin by the amount
+              %specified in the first argument.
+  %Start the minipage
+  \begin{minipage}[h]{\mpwidth}
+    %Set the default paragraph indentation (since there is no paragraph indentation
+    %in the minipage environment, that is, LaTeX sets \parindent to 0pt).
+    \setlength{\parindent}{\oldindent}% default value of \parindent is 1.5em.
+}%
+{%
+  \end{minipage}
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% Below are parameters for writing code in a box with line numbers on the
+% left hand side. The code should be written between \begin{lstlisting}[numbers=left]
+% and \end{lstlisting}. TIP: to keep the box on the same page encapsulate
+% the \begin{lstlisting} in \begin{minipage}{\textwidth} and \end{minipage}.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.1,0.1,0.1}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{grey}{rgb}{0.95,0.95,0.95}
+
+% some definitions for the Listings package
+\lstset{ %
+  language=Java,                % the language of the code
+  basicstyle=\footnotesize\ttfamily,           % the size of the fonts that are used for the code
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\footnotesize,          % the size of the fonts that are used for the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line 
+                                  % will be numbered
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{grey},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  numberstyle=\color{gray},        % line number style
+  keywordstyle=\bfseries,          % keyword style
+  %commentstyle=\color{dkgreen},       % comment style
+  %stringstyle=\color{mauve},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add a comment within your code
+  morekeywords={label, shape}               % if you want to add more keywords to the set
+}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  Default settings.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\cosupervisor{}
+\acknowledgements{}
+\abstract{}
+\dedication{}
+\publications{}
+\acronyms{}
+
+
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%  End of package.
+%%%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
